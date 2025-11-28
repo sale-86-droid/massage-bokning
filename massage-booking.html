@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zakazivanje masaže</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f3f4ff, #fdfbff);
+      padding: 16px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+    .app {
+      max-width: 480px;
+      width: 100%;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .hero {
+      position: relative;
+      height: 170px;
+      overflow: hidden;
+    }
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,23,42,0.7), rgba(15,23,42,0.1));
+    }
+    .hero-text {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      color: #f9fafb;
+    }
+    .hero-text h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+    .hero-text p {
+      margin: 4px 0 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    .content {
+      padding: 18px 18px 20px;
+    }
+    label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+    input, select, button, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(99,102,241,0.2);
+    }
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+    button {
+      border: none;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    button:hover {
+      filter: brightness(1.03);
+    }
+    .small-note {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .bookings-title {
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 12px 18px 6px;
+      color: #111827;
+    }
+    .booking-list {
+      max-height: 320px;
+      overflow-y: auto;
+      padding: 0 18px 14px;
+    }
+    .booking-item {
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      background: #f9fafb;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .booking-main {
+      font-size: 0.9rem;
+      color: #111827;
+      max-width: 70%;
+    }
+    .booking-main span {
+      display: block;
+    }
+    .booking-name {
+      font-weight: 600;
+    }
+    .booking-meta {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .booking-address {
+      font-size: 0.8rem;
+      color: #4b5563;
+      margin-top: 2px;
+    }
+    .badge {
+      font-size: 0.7rem;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: #e0e7ff;
+      color: #3730a3;
+      white-space: nowrap;
+    }
+    .empty {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      padding: 0 18px 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <div class="hero">
+        <img src="https://images.pexels.com/photos/3738341/pexels-photo-3738341.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Masaža i opuštanje" />
+        <div class="hero-overlay"></div>
+        <div class="hero-text">
+          <h1>Formular za zakazivanje masaže</h1>
+          <p>Za kućnu masažu unesite adresu klijenta.</p>
+        </div>
+      </div>
+      <div class="content">
+        <form id="bookingForm">
+          <label for="name">Vaše ime</label>
+          <input id="name" type="text" placeholder="Unesite ime klijenta" required />
+
+          <label for="phone">Broj telefona</label>
+          <input id="phone" type="tel" placeholder="07X-XXX XXX" required />
+
+          <label for="address">Adresa (za kućnu posetu)</label>
+          <input id="address" type="text" placeholder="Ulica, broj, grad" required />
+
+          <label for="type">Izaberite vrstu masaže</label>
+          <select id="type">
+            <option>Opuštanje 60 min</option>
+            <option>Leđa 30 min</option>
+            <option>Dubinska 60 min</option>
+            <option>Paket (5 masaža)</option>
+          </select>
+
+          <label for="date">Izaberite datum</label>
+          <input id="date" type="date" required />
+
+          <label for="time">Izaberite vreme</label>
+          <input id="time" type="time" required />
+
+          <label for="note">Napomena (opciono)</label>
+          <textarea id="note" placeholder="Npr. kod ulaza B, 3. sprat, kod lifta..."></textarea>
+
+          <button type="submit">Sačuvaj termin</button>
+          <div class="small-note">Napomena: termini se čuvaju lokalno samo na ovom telefonu.</div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bookings-title">Zakazani termini</div>
+      <div id="bookingList" class="booking-list"></div>
+      <div id="emptyState" class="empty" style="display:none;">
+        Još nema sačuvanih termina. Kada dodate prvi termin, pojaviće se ovde.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function loadBookings() {
+      try {
+        const raw = localStorage.getItem("massage_bookings_v3");
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        console.error("Greška pri čitanju localStorage:", e);
+        return [];
+      }
+    }
+
+    function saveBookings(list) {
+      try {
+        localStorage.setItem("massage_bookings_v3", JSON.stringify(list));
+      } catch (e) {
+        console.error("Greška pri upisu localStorage:", e);
+      }
+    }
+
+    function renderBookings() {
+      const listEl = document.getElementById("bookingList");
+      const emptyEl = document.getElementById("emptyState");
+      const bookings = loadBookings();
+
+      listEl.innerHTML = "";
+
+      if (!bookings.length) {
+        emptyEl.style.display = "block";
+        return;
+      } else {
+        emptyEl.style.display = "none";
+      }
+
+      bookings
+        .sort((a, b) => {
+          const da = a.date + " " + a.time;
+          const db = b.date + " " + b.time;
+          return da.localeCompare(db);
+        })
+        .forEach((b) => {
+          const item = document.createElement("div");
+          item.className = "booking-item";
+
+          const main = document.createElement("div");
+          main.className = "booking-main";
+
+          const nameSpan = document.createElement("span");
+          nameSpan.className = "booking-name";
+          nameSpan.textContent = b.name;
+
+          const metaSpan = document.createElement("span");
+          metaSpan.className = "booking-meta";
+          metaSpan.textContent = `${b.date} • ${b.time} • ${b.phone}`;
+
+          const addressSpan = document.createElement("span");
+          addressSpan.className = "booking-address";
+          addressSpan.textContent = b.address;
+
+          main.appendChild(nameSpan);
+          main.appendChild(metaSpan);
+          main.appendChild(addressSpan);
+
+          if (b.note && b.note.trim()) {
+            const noteSpan = document.createElement("span");
+            noteSpan.className = "booking-address";
+            noteSpan.textContent = "Napomena: " + b.note.trim();
+            main.appendChild(noteSpan);
+          }
+
+          const badge = document.createElement("div");
+          badge.className = "badge";
+          badge.textContent = b.type;
+
+          item.appendChild(main);
+          item.appendChild(badge);
+
+          listEl.appendChild(item);
+        });
+    }
+
+    document.getElementById("bookingForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const type = document.getElementById("type").value;
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+      const note = document.getElementById("note").value;
+
+      if (!name || !phone || !address || !date || !time) return;
+
+      const bookings = loadBookings();
+      bookings.push({ name, phone, address, type, date, time, note, createdAt: new Date().toISOString() });
+      saveBookings(bookings);
+      renderBookings();
+
+      this.reset();
+      alert("Termin je sačuvan (samo na ovom uređaju).");
+    });
+
+    document.addEventListener("DOMContentLoaded", renderBookings);
+  </script>
+</body>
+</html>
